@@ -1,0 +1,83 @@
+'use strict'
+const User = use('App/Models/User');
+const Medico = use('App/Models/Medico');
+const Paciente = use('App/Models/Paciente');
+
+class UserController {
+    async index({ request, response, view }) {
+        const user = await User.all();
+        return user;
+    
+      }
+    
+      async store({ request, response, view, auth }) {
+        const data = request.only(['nivel', 'email','password','nome','cpf','telefone','path']);
+        const data_m = request.only(['corem', 'especializacao','instituicao','user_id']);
+        const data_c = request.only(['sangue', 'peso','altura','user_id']);
+        const profilePic = request.file('profile_pic', {
+          types: ['image'],
+          size: '2mb'
+        }  
+      
+        const user = await User.create(data);
+        const ID = await User.getMax('id');
+        
+
+        if( data['nivel'] == 1){
+          data_m['user_id'] = ID
+          const medico = await Medico.create(data_m);
+
+        }else if (data['nivel'] == 2){
+
+          data_c['user_id'] = ID
+          const paciente = await Paciente.create(data_c);
+        }
+ 
+        return user;    
+
+      }
+    
+      async update({ params, request, response }) {
+        const user = await User.findOrFail(params.id);
+        const data = request.only(['nivel', 'email','password','nome','cpf','telefone']);
+        
+        user.merge(data);
+        await user.save();
+        
+        return user
+      }
+    
+      async destroy({ params, request, response }) {
+        const user = await User.findOrFail(params.id);
+        await user.delete();
+      }
+
+      async login ({ auth, request }) {
+        const { email, password } = request.all()
+        return await auth.attempt(email, password)
+        
+      }
+      
+      async show ({ auth, params }) {
+        const user = await auth.getUser()
+        let retorno  
+          if(user.nivel == 1){
+          const medico = await Medico.findBy('user_id',user.id);
+          medico.user=user
+          retorno = medico
+
+        }else if (user.nivel == 2){
+          const paciente = await Paciente.findBy('user_id',user.id);
+          paciente.user=user
+          retorno = paciente
+        }
+
+        return retorno;
+        
+      }
+      
+}
+
+
+module.exports = UserController
+
