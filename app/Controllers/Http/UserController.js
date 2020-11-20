@@ -2,6 +2,9 @@
 const User = use('App/Models/User');
 const Medico = use('App/Models/Medico');
 const Paciente = use('App/Models/Paciente');
+const Instituicao = use('App/Models/Instituicao');
+const Helpers = use('Helpers')
+
 
 class UserController {
     async index({ request, response, view }) {
@@ -11,25 +14,37 @@ class UserController {
       }
     
       async store({ request, response, view, auth }) {
-        const data = request.only(['nivel', 'email','password','nome','cpf','telefone','path']);
-        const data_m = request.only(['corem', 'especializacao','instituicao','user_id']);
+        const data = request.only(['nivel', 'email','password','nome','cpf','telefone','path','nascimento']);
+        const data_m = request.only(['corem', 'especializacao','instituicao','user_id','instituicao_id']);
         const data_c = request.only(['sangue', 'peso','altura','user_id']);
-        const profilePic = request.file('profile_pic', {
-          types: ['image'],
-          size: '2mb'
-        }  
-      
+
+        const profilePic = request.file('img'); 
+
+        let nome = new Date().getTime();
+        nome = `${nome}.${profilePic.subtype}`
+        const path = `uploads/userImage/${nome}`
+
+        data.path = path
+
+        await profilePic.move(Helpers.tmpPath(`uploads/userImage/`), {
+        name: `${nome}`
+
+        
+      })
+
+
+
         const user = await User.create(data);
         const ID = await User.getMax('id');
         
 
-        if( data['nivel'] == 1){
-          data_m['user_id'] = ID
+        if( data.nivel == 1){
+          data_m.user_id = ID
           const medico = await Medico.create(data_m);
 
-        }else if (data['nivel'] == 2){
+        }else if (data.nivel== 2){
 
-          data_c['user_id'] = ID
+          data_c.user_id = ID
           const paciente = await Paciente.create(data_c);
         }
  
@@ -39,7 +54,7 @@ class UserController {
     
       async update({ params, request, response }) {
         const user = await User.findOrFail(params.id);
-        const data = request.only(['nivel', 'email','password','nome','cpf','telefone']);
+        const data = request.only(['nivel', 'email','password','nome','cpf','telefone','path','nascimento']);
         
         user.merge(data);
         await user.save();

@@ -8,7 +8,7 @@ class ConsultaController {
        async store({ request, response, view, auth}) {
         const user = await auth.getUser()
         const data = request.only(['dia', 'paciente_user_id','medico_user_id']);
-        data['paciente_user_id'] = await user.id 
+        data.paciente_user_id = await user.id 
         const consulta = await Consulta.create(data)
 
         return consulta;

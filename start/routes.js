@@ -23,7 +23,14 @@ Route.get('/', () => {
 
 Route.resource('/cadastro', 'UserController').apiOnly();
 
-Route.resource('/Medico', 'MedicoController').apiOnly();
+Route.resource('/Instituicao', 'InstituicaoController').apiOnly();
+
+Route.resource('/Especializacao', 'EspecializacaoController').apiOnly();
+Route.resource('/EspecializacaoMedico', 'EspecializacaoMedicoController').apiOnly();
+Route
+  .get('ShowEspecializacaoMedico', 'EspecializacaoMedicoController.show')
+  .middleware('auth');
+
 
 Route
   .post('login', 'UserController.login') 
