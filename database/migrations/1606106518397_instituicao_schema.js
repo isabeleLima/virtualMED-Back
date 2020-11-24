@@ -7,7 +7,7 @@ class InstituicaoSchema extends Schema {
   up () {
     this.create('instituicaos', (table) => {
       table.increments()
-      table.string('nome', 80).notNullable()
+      table.string('nome', 60).notNullable()
       table.timestamps()
     })
   }

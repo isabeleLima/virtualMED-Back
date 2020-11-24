@@ -17,7 +17,9 @@
 const Route = use('Route')
 
 Route.get('/', () => {
-  return { greeting: 'Hello world in JSON' }
+  return {
+    greeting: 'Hello world in JSON'
+  }
 })
 
 
@@ -26,21 +28,19 @@ Route.resource('/cadastro', 'UserController').apiOnly();
 Route.resource('/Instituicao', 'InstituicaoController').apiOnly();
 
 Route.resource('/Especializacao', 'EspecializacaoController').apiOnly();
+
 Route.resource('/EspecializacaoMedico', 'EspecializacaoMedicoController').apiOnly();
-Route
-  .get('ShowEspecializacaoMedico', 'EspecializacaoMedicoController.show')
-  .middleware('auth');
 
+Route.resource('consulta', 'ConsultaController').middleware('auth');
 
-Route
-  .post('login', 'UserController.login') 
+Route.resource('/Receita', 'ReceitaController').apiOnly();
 
-Route
-  .get('users', 'UserController.show')
-  .middleware('auth');
+Route.post('Showconsulta', 'ConsultaController.show').middleware('auth');
 
-  Route
-  .resource('consulta', 'ConsultaController')
-  .middleware('auth');
+Route.get('ShowEspecializacaoMedico', 'EspecializacaoMedicoController.show').middleware('auth');
 
-  
+Route.get('users', 'UserController.show').middleware('auth');
+
+Route.get('ShowConsulta', 'ConsultaController.show').middleware('auth');
+
+Route.post('login', 'UserController.login')

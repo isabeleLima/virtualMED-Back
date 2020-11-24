@@ -18,13 +18,13 @@ class EspecializacaoMedicoController {
     const user = await auth.getUser()
     const especializacaoMedico = await EspecializacaoMedico.query().where('medico_user_id', '=', `${user.id}`).fetch()
 
-    let nomeEspecializacao = new Array ;
+    let nomeEspecializacao = [] ;
 
-    for(var i=0; i<especializacaoMedico.rows.length; i++){
+    for(let i=0; i<especializacaoMedico.rows.length; i++){
 
       const id = especializacaoMedico.rows[i].especializacao_id
       const aux = await  Especializacao.query().select('nome').where('id', '=', `${id}`).fetch()
-      nomeEspecializacao.push(aux)
+      nomeEspecializacao.push(aux.rows[0])
 
     }
     return nomeEspecializacao
