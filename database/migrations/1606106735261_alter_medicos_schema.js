@@ -6,6 +6,7 @@ const Schema = use('Schema')
 class AlterMedicosSchema extends Schema {
   up () {
     this.table('medicos', (table) => {
+      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('cascade').onUpdate('cascade')
       table.integer('instituicaoid_id').unsigned().references('id').inTable('instituicaos').onDelete('cascade').onUpdate('cascade')
     })
   }

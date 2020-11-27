@@ -6,8 +6,8 @@ const Schema = use('Schema')
 class AlterPacientesSchema extends Schema {
   up () {
     this.table('pacientes', (table) => {
-      table.increments();
-      table.timestamps()
+     
+      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('cascade').onUpdate('cascade')
     })
   }
 
