@@ -1,0 +1,34 @@
+@hostname = localhost
+@port = 3333
+
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+
+
+## Login
+# @name login
+POST http://{{host}}/auth/login
+content-type: {{ contentType }}
+Accept: {{ contentType }}
+
+{
+  "email": "isabele123@gmail.com",
+  "password": "12345678910"
+}
+
+###
+@authToken = {{login.response.body.token}}
+
+## Cadastro 
+# @name cadastro
+POST http://{{host}}/auth/cadastro
+content-type: {{ contentType }}
+Accept: {{ contentType }}
+
+{
+  "email": "isabele123@gmail.com",
+  "password": "12345678910",
+  "type_of_user": 1
+}
+
+###

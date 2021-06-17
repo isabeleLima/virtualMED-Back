@@ -16,24 +16,11 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
-Route.get('/', () => {
-  return { greeting: 'Hello world in JSON' }
-})
+Route.group(() => {
+  Route.post('login' , 'AuthController.login')
+  Route.post('cadastro', 'AuthController.store')
+}).prefix('auth')
 
 
-Route.resource('/cadastro', 'UserController').apiOnly();
-
-Route.resource('/Medico', 'MedicoController').apiOnly();
-
-Route
-  .post('login', 'UserController.login') 
-
-Route
-  .get('users', 'UserController.show')
-  .middleware('auth');
-
-  Route
-  .resource('consulta', 'ConsultaController')
-  .middleware('auth');
 
   
