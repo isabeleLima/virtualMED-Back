@@ -1,16 +1,22 @@
 'use strict'
 const User = use('App/Models/User');
-const Medico = use('App/Models/Medico');
-const Paciente = use('App/Models/Paciente');
-const Helpers = use('Helpers');
-
-
 class UserController {
-  async index({request,response,view }) {
-    const user = await User.all();
 
-    return user
-    
+  async show({auth,params}) {
+    const user = await auth.getUser()
+    let retorno
+    if (user.nivel == 1) {
+      const medico = await Medico.findBy('user_id', user.id);
+      medico.user = user
+      retorno = medico
+
+    } else if (user.nivel == 2) {
+      const paciente = await Paciente.findBy('user_id', user.id);
+      paciente.user = user
+      retorno = paciente
+    }
+
+    return retorno;
 
   }
 
@@ -91,10 +97,6 @@ class UserController {
 
    }
 
-  async destroy({params,request, response}) {
-    const user = await User.findOrFail(params.id);
-    await user.delete();
-  }
 
   async login({auth,request}) {
     const {
@@ -105,23 +107,7 @@ class UserController {
 
   }
 
-  async show({auth,params}) {
-    const user = await auth.getUser()
-    let retorno
-    if (user.nivel == 1) {
-      const medico = await Medico.findBy('user_id', user.id);
-      medico.user = user
-      retorno = medico
-
-    } else if (user.nivel == 2) {
-      const paciente = await Paciente.findBy('user_id', user.id);
-      paciente.user = user
-      retorno = paciente
-    }
-
-    return retorno;
-
-  }
+  
 
 }
 
