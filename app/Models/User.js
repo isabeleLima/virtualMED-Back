@@ -35,10 +35,12 @@ class User extends Model {
     return this.hasMany('App/Models/Token')
   }
 
-  medico () {
+  doctor () {
+    return this.hasOne('App/Models/Doctor')
+  }
 
-    return this.hasOne('App/Models/Medico')
-    
+  patient () {
+    return this.hasOne('App/Models/Patient')
   }
 }
 

@@ -4,6 +4,14 @@
 const Model = use('Model')
 
 class Doctor extends Model {
+    appointment () {
+        return this.hasMany('App/Models/Apointment')
+      }
+
+    user () {
+        return this.belongsTo('App/Models/User')
+    }
+
 }
 
 module.exports = Doctor
