@@ -5,12 +5,12 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 /**
- * Resourceful controller for interacting with testes
+ * Resourceful controller for interacting with prescriptions
  */
-class TesteController {
+class PrescriptionController {
   /**
-   * Show a list of all testes.
-   * GET testes
+   * Show a list of all prescriptions.
+   * GET prescriptions
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -21,8 +21,8 @@ class TesteController {
   }
 
   /**
-   * Render a form to be used for creating a new teste.
-   * GET testes/create
+   * Render a form to be used for creating a new prescription.
+   * GET prescriptions/create
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -33,8 +33,8 @@ class TesteController {
   }
 
   /**
-   * Create/save a new teste.
-   * POST testes
+   * Create/save a new prescription.
+   * POST prescriptions
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -44,8 +44,8 @@ class TesteController {
   }
 
   /**
-   * Display a single teste.
-   * GET testes/:id
+   * Display a single prescription.
+   * GET prescriptions/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -53,14 +53,11 @@ class TesteController {
    * @param {View} ctx.view
    */
   async show ({ params, request, response, view }) {
-      
-
-
   }
 
   /**
-   * Render a form to update an existing teste.
-   * GET testes/:id/edit
+   * Render a form to update an existing prescription.
+   * GET prescriptions/:id/edit
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -71,8 +68,8 @@ class TesteController {
   }
 
   /**
-   * Update teste details.
-   * PUT or PATCH testes/:id
+   * Update prescription details.
+   * PUT or PATCH prescriptions/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -82,8 +79,8 @@ class TesteController {
   }
 
   /**
-   * Delete a teste with id.
-   * DELETE testes/:id
+   * Delete a prescription with id.
+   * DELETE prescriptions/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -93,4 +90,4 @@ class TesteController {
   }
 }
 
-module.exports = TesteController
+module.exports = PrescriptionController
