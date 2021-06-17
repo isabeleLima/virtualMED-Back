@@ -7,13 +7,13 @@ class UserSchema extends Schema {
   up () {
     this.create('users', (table) => {
       table.increments()
-      table.string('cpf', 11).notNullable().unique()
-      table.integer('nivel').notNullable()
+      table.string('cpf', 11).unique()
+      table.integer('type_of_user').notNullable() //adm 0 doctor 1 pacient 2
       table.string('email', 254).notNullable().unique()
       table.string('password', 60).notNullable()
-      table.string('telefone', 11).notNullable()
-      table.date('nascimento').notNullable()
-      table.string('path', 254)
+      table.string('contact_number', 11)
+      table.date('birth_date')
+      table.string('url_image', 254).defaultTo("/urldefaltdeumaimagem")
       table.timestamps()
     })
   }
