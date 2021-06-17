@@ -1,93 +1,90 @@
-'use strict'
+"use strict";
+const User = use("App/Models/User");
+const Medico = use("App/Models/Medico");
+const Paciente = use("App/Models/Paciente");
+const Consulta = use("App/Models/Consulta");
+const Receita = use("App/Models/Receita");
+const Cancelada = use("App/Models/Cancelada");
 
-/** @typedef {import('@adonisjs/framework/src/Request')} Request */
-/** @typedef {import('@adonisjs/framework/src/Response')} Response */
-/** @typedef {import('@adonisjs/framework/src/View')} View */
+class ConsultaController {
+  async index({ request, response, view, params , auth}) {
+    const user = await auth.getUser();
+    let consulta;
+    let {data} =  request.get("data")
 
-/**
- * Resourceful controller for interacting with appointments
- */
-class AppointmentController {
-  /**
-   * Show a list of all appointments.
-   * GET appointments
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async index ({ request, response, view }) {
+    if (user.nivel == 1) {
+      consulta = await Consulta.query()
+        .where("medico_user_id", "=", `${user.id}`)
+        .fetch();
+    } else {
+      consulta = await Consulta.query()
+        .where("paciente_user_id", "=", `${user.id}`)
+        .andWhere("dia", "<", data)
+        .fetch();
+    }
+    return consulta;
+
   }
 
-  /**
-   * Render a form to be used for creating a new appointment.
-   * GET appointments/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+  async store({ request, response, view, auth }) {
+    const user = await auth.getUser();
+    const data = request.only(["dia", "paciente_user_id", "medico_user_id"]);
+    if(user.nivel == 1){  
+      data.medico_user_id = await user.id;
+    }else if (user.nivel == 2){
+      data.paciente_user_id = await user.id;
+    }
+    const consulta = await Consulta.create(data);
+    return consulta;
   }
 
-  /**
-   * Create/save a new appointment.
-   * POST appointments
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async store ({ request, response }) {
-  }
+  async show({ params, request, response, view, auth }) {
+    const user = await auth.getUser();
+    let consulta;
+    const status =  request.only("status");
+    if(user.nivel == 1){
+      if(status.status == "1"){
+        consulta = await Consulta.query()
+        .where("medico_user_id", "=", `${user.id}`).andWhere("status", "=", "1")
+        .fetch();
 
-  /**
-   * Display a single appointment.
-   * GET appointments/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response, view }) {
+      }else if (status == "2"){
+        consulta = await Consulta.query()
+        .where("medico_user_id", "=", `${user.id}`).andWhere("status", "=", "2")
+        .fetch();
+      }else if(status == "3"){
+        consulta = await Consulta.query()
+        .where("medico_user_id", "=", `${user.id}`).andWhere("status", "=", "3")
+        .fetch();
+      }else if (status == "4"){
+        consulta = await Consulta.query()
+        .where("medico_user_id", "=", `${user.id}`).andWhere("status", "=", "4")
+        .fetch();
+      }
+      
+    }
+    return consulta;
   }
+  async update({params,request,response}) {
+    const consulta = await Consulta.findOrFail(params.id);
+    const status = request.only("status");
+    const data_r = request.only(['consulta_id', 'receita']);
+    const data_cn = request.only(['consulta_id', 'motivo']);
 
-  /**
-   * Render a form to update an existing appointment.
-   * GET appointments/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
+    consulta.merge(status);
+    await consulta.save();
 
-  /**
-   * Update appointment details.
-   * PUT or PATCH appointments/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async update ({ params, request, response }) {
-  }
+    if(status.status == 3){
+      data_r.consulta_id = params.id
+      const receita = await Receita.create(data_r);
+    }else if (status.status == 4){
+      data_cn.consulta_id = params.id
+      const cancelada = await Cancelada.create(data_cn);
+    }
 
-  /**
-   * Delete a appointment with id.
-   * DELETE appointments/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async destroy ({ params, request, response }) {
+    return consulta
   }
+  
 }
 
-module.exports = AppointmentController
+module.exports = ConsultaController;
