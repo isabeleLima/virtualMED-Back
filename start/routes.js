@@ -19,6 +19,7 @@ const Route = use('Route')
 Route.group(() => {
   Route.post('login' , 'AuthController.login')
   Route.post('cadastro', 'AuthController.store')
+  Route.post('cadastro/adm', 'AuthController.storeNewAdm')
 }).prefix('auth')
 
 

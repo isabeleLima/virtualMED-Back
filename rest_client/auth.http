@@ -30,5 +30,17 @@ Accept: {{ contentType }}
   "password": "12345678910",
   "type_of_user": 1
 }
+###
 
+## Cadastro de adm
+# @name cadastro
+POST http://{{host}}/auth/cadastro/adm
+content-type: {{ contentType }}
+Accept: {{ contentType }}
+
+{
+  "email": "isabele123@gmail.com",
+  "password": "12345678910",
+  "type_of_user": 0
+}
 ###
