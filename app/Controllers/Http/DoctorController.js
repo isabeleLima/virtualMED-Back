@@ -1,39 +1,86 @@
 'use strict'
 
-const User = use('App/Models/User');
-const Medico = use('App/Models/Medico');
-const Consulta = use('App/Models/Consulta');
+const User = use('App/Models/User')
+const Doctor = use('App/Models/Doctor')
+const Appointment = use('App/Models/Appointment')
 
 
+class DoctorController {
+    async showPendingAppointment ({auth,request,response}){
+        try {
+        const appointments = await Appointment.query()
+            .where('doctor_id',auth.id)
+            .where('status','pending')
+            .fetch()
 
-class MedicoController {
-    
-    async index({request, response, view, params }) {
-     
-     
+        return appointments    
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+    async showAcceptAppointment ({auth,request,response}){
+        try {
+        const appointments = await Appointment.query()
+            .where('doctor_id',auth.id)
+            .where('status','accept')
+            .fetch()
+
+        return appointments    
         
-    
-      }
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+    async showCancelAppointment ({params,auth,request,response}){
+        try {
+        const appointments = await Appointment.query()
+            .where('doctor_id',auth.id)
+            .where('status','cancel')
+            .fetch()
 
-      async show ({ params, request, response, view, auth }) {
+        return appointments    
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+    async showFinishedAppointment ({params,auth,request,response}){
+        try {
+        const appointments = await Appointment.query()
+            .where('doctor_id',auth.id)
+            .where('status','finished')
+            .fetch()
 
+        return appointments    
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+    async CancelAppointment ({auth,request,response}){
+        try {
+        const data = request.all()
+        const appointment = await Appointment.query()
+            .where('doctor_id',auth.id)
+            .where('id',params.id)
+            .first()
 
-      }
-    
-      async update({ params, request, response }) {
-        const medico = await Medico.findOrFail(params.id);
-        const data = request.only(['corem', 'especializacao','instituicao']);
-        
-        medico.merge(data);
-        await medico.save();
-        
-        return medico
-      }
-    
-      async destroy({ params, request, response }) {
-        const medico = await Medico.findOrFail(params.id);
-        await medico.delete();
-      }
+        appointment.merge({
+            status: 'cancel',
+            reason: data.reason
+        })
+
+        appointment.save()
+
+        return appointment    
+
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
 }
 
-module.exports = MedicoController
+module.exports = DoctorController
