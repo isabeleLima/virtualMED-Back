@@ -7,10 +7,10 @@ class AppointmentSchema extends Schema {
   up () {
     this.create('appointments', (table) => {
       table.increments()
-
-      table.datetime('date')
-      table.string('status').notNullable() //ON HOLD //ACCEPT //DENIED //COMPLETED //LOST 
- 
+      table.string('status').notNullable().defalt('pending') //pending //accept //cancel //finished //lost 
+      table.datetime('date_start')
+      table.datetime('date_end')
+      table.string('reason', 255)
 
       table.integer('doctor_id').unsigned().references('id').inTable('doctors')
       .onDelete('cascade').onUpdate('cascade');

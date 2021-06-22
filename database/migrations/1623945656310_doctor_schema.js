@@ -9,7 +9,7 @@ class DoctorSchema extends Schema {
       table.increments()
       table.string('corem', 11).notNullable()
       table.string('residency', 60).notNullable()
-
+      table.boolean('is_activated').default(0)
       table.integer('user_id').unsigned().references('id').inTable('users')
         .onDelete('cascade').onUpdate('cascade')
       table.integer('institution_id').unsigned().references('id').inTable('institutions')
