@@ -6,7 +6,23 @@ class UserController {
   async index({ request, response, view }) {
     return User.all()
   }
-
+  async listPatientes({ request, response, view }) {
+    return User.query()
+      .where('type_of_user',2)
+      .with('patient') 
+      .fetch()
+   }
+  async listDoctors({ request, response, view }) {
+    return User.query()
+    .where('type_of_user',1)
+    .with('doctor') 
+    .fetch()
+  }
+  async listAdm({ request, response, view }) {
+    return User.query()
+    .where('type_of_user',0)
+    .fetch()
+  }
 
   async destroy({ params, response }) {
     try {

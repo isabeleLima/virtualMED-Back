@@ -14,6 +14,7 @@ class UserController {
       const data = resquest.all()
   
       user.merge({
+        name: data.name,
         cpf: data.cpf,
         email: data.email,
         password: data.password,

@@ -19,27 +19,49 @@ Accept: {{ contentType }}
 ###
 @authToken = {{login.response.body.token}}
 
-## Cadastro 
+## Cadastro de paciente
 # @name cadastro
-POST http://{{host}}/auth/cadastro
+POST http://{{host}}/auth/cadastro/patient
 content-type: {{ contentType }}
 Accept: {{ contentType }}
 
 {
-  "email": "isabele123@gmail.com",
+  "email": "PATIENTE@gmail.com",
   "password": "12345678910",
-  "type_of_user": 1
+  "type_of_user": 2,
+  "blood_type": "+AB",
+  "weight":65,
+  "height":170
 }
 ###
+
+## Cadastro de medico
+# @name cadastro
+POST http://{{host}}/auth/cadastro/doctor
+content-type: {{ contentType }}
+Accept: {{ contentType }}
+
+{
+  "email": "DOCTOR@gmail.com",
+  "password": "12345678910",
+  "type_of_user": 1,
+  "coren":"COREN-CE-000.000-XXX",
+  "residency": "CARDIOLOGIA",
+  "institution_id ": 1
+}
+###
+
+@authToken = {{login.response.body.token}}
 
 ## Cadastro de adm
 # @name cadastro
 POST http://{{host}}/auth/cadastro/adm
 content-type: {{ contentType }}
 Accept: {{ contentType }}
+Authorization: Bearer {{authToken}}
 
 {
-  "email": "isabele123@gmail.com",
+  "email": "isabelesegundaadm@gmail.com",
   "password": "12345678910",
   "type_of_user": 0
 }

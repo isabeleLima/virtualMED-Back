@@ -1,5 +1,7 @@
 'use strict'
 
+const DoctorController = require('../app/Controllers/Http/adm/DoctorController')
+
 /*
 |--------------------------------------------------------------------------
 | Routes
@@ -18,10 +20,22 @@ const Route = use('Route')
 
 Route.group(() => {
   Route.post('login' , 'AuthController.login')
-  Route.post('cadastro', 'AuthController.store')
   Route.post('cadastro/adm', 'AuthController.storeNewAdm')
+  Route.post('cadastro/patient', 'AuthController.storeNewPatient')
+  Route.post('cadastro/doctor', 'AuthController.storeNewDoctor')
+
 }).prefix('auth')
 
+Route.group(() => {
+  
+  Route.get('user/adm', 'adm/UserController.listAdm')
+  Route.get('user/patient', 'adm/UserController.listPatientes')
+  Route.get('user/doctor', 'adm/UserController.listDoctors')
 
+  Route.put('doctor/:id','adm/DoctorController.activateDoctor')
+  Route.resource('user', 'adm/UserController')
+
+
+}).prefix('adm')
 
   

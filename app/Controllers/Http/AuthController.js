@@ -20,11 +20,12 @@ class AuthController {
 
     }
 
-    async store({request,response,view,auth}) {
+    async storeNewPatient({request,response,view,auth}) {
         try{
             const data = request.all();
 
             const user = await User.create({
+                name: data.name,
                 cpf : data.cpf,
                 type_of_user: data.type_of_user,
                 email:data.email,
@@ -40,7 +41,7 @@ class AuthController {
                     residency: data.residency,
                     institution_id : data.institution_id,
                     user_id: user.id
-                 })// criar um atributo como isActivated com defalt false pro adm autorizar
+                 })
 
                 return response.json({
                     message: 'seu cadastro foi realizado com sucesso! Agora é só esperar a aprovação de um administrador', 
@@ -68,11 +69,51 @@ class AuthController {
             throw error
         }
     }
+    
+    async storeNewDoctor({request,response,view,auth}) {
+        try{
+            const data = request.all();
 
-    async storeNewAdm({request,response,view,auth}) {
+            const user = await User.create({
+                name: data.name,
+                cpf : data.cpf,
+                type_of_user: data.type_of_user,
+                email:data.email,
+                password: data.password,
+                contact_number: data.contact_number,
+                birth_date: data.birth_date,
+                url_image: data.url_image
+            })
+
+            if(data.type_of_user == 1){
+                const doctor = await Doctor.create({
+                    coren : data.corem,
+                    residency: data.residency,
+                    institution_id : data.institution_id,
+                    user_id: user.id
+                 })
+
+                return response.json({
+                    message: 'seu cadastro foi realizado com sucesso! Agora é só esperar a aprovação de um administrador', 
+                    data: user
+                })
+            
+            }else{
+                throw new Error('tipo de usuario invalido')
+            }
+            
+        }  catch (error) {
+            console.error(error)
+            throw error
+        }
+    }
+
+    async storeNewAdm({request,response,auth}) {
         try{
 
-            const adm =  auth.getUser();
+            const adm =  await auth.getUser();
+
+            console.log(adm)
 
             if(adm.type_of_user != 0){
                 throw new Error('Você não tem permissão para isso')
@@ -80,6 +121,7 @@ class AuthController {
                 const data = request.all();
 
                 const user = await User.create({
+                    name: data.name,
                     cpf : data.cpf,
                     type_of_user: data.type_of_user,
                     email:data.email,
