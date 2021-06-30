@@ -7,12 +7,12 @@ class AppointmentSchema extends Schema {
   up () {
     this.create('appointments', (table) => {
       table.increments()
-      table.string('status').notNullable().defalt('pending') //pending //accept //cancel //finished //lost 
+      table.string('status').notNullable().defaultTo('pending') //pending //accept //cancel //finished //lost 
       table.datetime('date_start')
       table.datetime('date_end')
       table.string('reason', 255)
 
-      table.integer('doctor_id').unsigned().references('id').inTable('doctors')
+      table.integer('doctor_id').unsigned().references('user_id').inTable('doctors')
       .onDelete('cascade').onUpdate('cascade');
       table.integer('patient_id').unsigned().references('user_id')
       .inTable('patients').onDelete('cascade').onUpdate('cascade')
